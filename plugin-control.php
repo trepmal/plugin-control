@@ -23,14 +23,14 @@ class Plugin_Control {
 
 	function __construct() {
 
-		$this->blocklist = get_option( 'block-plugins', array(
-			'akismet/akismet.php',
-		) );
+		$this->blocklist = get_option( 'block-plugins', array() );
+		$this->showblocked = get_option( 'show-blocked-plugins', false );
 
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 
 		// filter plugins list
-		// add_filter( 'all_plugins', array( &$this, 'all_plugins' ) );
+		if ( ! $this->showblocked )
+			add_filter( 'all_plugins', array( &$this, 'all_plugins' ) );
 		add_filter( 'plugin_action_links', array( &$this, 'plugin_action_links' ), 10, 4 );
 		add_action( 'after_plugin_row', array( &$this, 'after_plugin_row' ) );
 
@@ -44,16 +44,21 @@ class Plugin_Control {
 
 	function admin_init() {
 		register_setting( 'pc-opt-group', 'block-plugins', array( &$this, 'sanitize' ) );
+		register_setting( 'pc-opt-group', 'show-blocked-plugins', array( &$this, 'sanitize' ) );
+
 		add_settings_section( 'pc-section', __('', $this->textdomain ), '__return_false', $this->pagename );
-		add_settings_field( 'pc-field', __( 'Block Plugins', $this->textdomain ), array( &$this, 'field' ), $this->pagename, 'pc-section', get_option( 'block-plugins', array() ) );
+
+		add_settings_field( 'pc-field-block-plugins', __( 'Block Plugins', $this->textdomain ), array( &$this, 'field1' ), $this->pagename, 'pc-section', $this->blocklist );
+
+		add_settings_field( 'pc-field-show-blocked-plugins', __( 'Show Blocked Plugins', $this->textdomain ), array( &$this, 'field2' ), $this->pagename, 'pc-section', $this->showblocked );
 	}
 
 	function sanitize( $input ) {
-		printer( $input );
+		// printer( $input );
 		return $input;
 	}
 
-	function field( $args ) {
+	function field1( $args ) {
 
 		$plugins = wp_list_pluck( get_plugins(), 'Name' );
 		echo '<ul>';
@@ -62,6 +67,12 @@ class Plugin_Control {
 			echo "<li><label><input type='checkbox' name='block-plugins[]' value='$path'$c /> $plug</label></li>";
 		}
 		echo '</ul>';
+
+	}
+
+	function field2( $args ) {
+		$c = checked( $args, 1, false );
+		echo "<p><input type='hidden' name='show-blocked-plugins' value='0' /><label><input type='checkbox' name='show-blocked-plugins' value='1'$c /></label></p>";
 
 	}
 
