@@ -130,7 +130,6 @@ class Plugin_Control {
 	function page() {
 		?><div class="wrap">
 		<h2><?php _e( 'Plugin Control', $this->textdomain ); ?></h2>
-		<p><?php _e( 'Coming soon. Choose which plugins are hidden for this site.', $this->textdomain ); ?></p>
 		<form action="options.php" method="post">
 		<?php
 			settings_fields( 'pc-opt-group' );
