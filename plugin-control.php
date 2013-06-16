@@ -3,13 +3,13 @@
  * Plugin Name: Plugin Control
  * Plugin URI: trepmal.com
  * Description:
- * Version: 2013.03.29
+ * Version: 2013.06.15
  * Author: Kailey Lampert
  * Author URI: kaileylampert.com
  * License: GPLv2 or later
  * TextDomain: plugin-control
  * DomainPath:
- * Network: false
+ * Network:
  */
 
 $plugin_control = new Plugin_Control();
