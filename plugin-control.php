@@ -17,7 +17,6 @@ $plugin_control = new Plugin_Control();
 class Plugin_Control {
 
 	var $blocklist;
-	var $textdomain = 'plugin-control';
 
 	var $pagename;
 
@@ -46,11 +45,11 @@ class Plugin_Control {
 		register_setting( 'pc-opt-group', 'block-plugins', array( &$this, 'sanitize' ) );
 		register_setting( 'pc-opt-group', 'show-blocked-plugins', array( &$this, 'sanitize' ) );
 
-		add_settings_section( 'pc-section', __('', $this->textdomain ), '__return_false', $this->pagename );
+		add_settings_section( 'pc-section', __('', 'plugin-control' ), '__return_false', $this->pagename );
 
-		add_settings_field( 'pc-field-block-plugins', __( 'Block Plugins', $this->textdomain ), array( &$this, 'field1' ), $this->pagename, 'pc-section', $this->blocklist );
+		add_settings_field( 'pc-field-block-plugins', __( 'Block Plugins', 'plugin-control' ), array( &$this, 'field1' ), $this->pagename, 'pc-section', $this->blocklist );
 
-		add_settings_field( 'pc-field-show-blocked-plugins', __( 'Show Blocked Plugins', $this->textdomain ), array( &$this, 'field2' ), $this->pagename, 'pc-section', $this->showblocked );
+		add_settings_field( 'pc-field-show-blocked-plugins', __( 'Show Blocked Plugins', 'plugin-control' ), array( &$this, 'field2' ), $this->pagename, 'pc-section', $this->showblocked );
 	}
 
 	function sanitize( $input ) {
@@ -124,12 +123,12 @@ class Plugin_Control {
 	}
 
 	function admin_menu() {
-		$this->pagename = add_plugins_page( __( 'Plugin Control', $this->textdomain ), __( 'Plugin Control', $this->textdomain ), 'edit_posts', __CLASS__, array( &$this, 'page' ) );
+		$this->pagename = add_plugins_page( __( 'Plugin Control', 'plugin-control' ), __( 'Plugin Control', 'plugin-control' ), 'edit_posts', __CLASS__, array( &$this, 'page' ) );
 	}
 
 	function page() {
 		?><div class="wrap">
-		<h2><?php _e( 'Plugin Control', $this->textdomain ); ?></h2>
+		<h2><?php _e( 'Plugin Control', 'plugin-control' ); ?></h2>
 		<form action="options.php" method="post">
 		<?php
 			settings_fields( 'pc-opt-group' );
