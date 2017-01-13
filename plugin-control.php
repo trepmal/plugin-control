@@ -25,31 +25,31 @@ class Plugin_Control {
 		$this->blocklist = get_option( 'block-plugins', array() );
 		$this->showblocked = get_option( 'show-blocked-plugins', false );
 
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
 		// filter plugins list
 		if ( ! $this->showblocked )
-			add_filter( 'all_plugins', array( &$this, 'all_plugins' ) );
-		add_filter( 'plugin_action_links', array( &$this, 'plugin_action_links' ), 10, 4 );
-		add_action( 'after_plugin_row', array( &$this, 'after_plugin_row' ) );
+			add_filter( 'all_plugins', array( $this, 'all_plugins' ) );
+		add_filter( 'plugin_action_links', array( $this, 'plugin_action_links' ), 10, 4 );
+		add_action( 'after_plugin_row', array( $this, 'after_plugin_row' ) );
 
 		// prevent back-door activation
-		add_filter( 'load-plugins.php', array( &$this, 'intercept_post' ), 10, 2 );
-		add_filter( 'pre_update_option_active_plugins', array( &$this, 'pre_update_option_active_plugins' ), 10, 2 );
+		add_filter( 'load-plugins.php', array( $this, 'intercept_post' ), 10, 2 );
+		add_filter( 'pre_update_option_active_plugins', array( $this, 'pre_update_option_active_plugins' ), 10, 2 );
 
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
 	}
 
 	function admin_init() {
-		register_setting( 'pc-opt-group', 'block-plugins', array( &$this, 'sanitize' ) );
-		register_setting( 'pc-opt-group', 'show-blocked-plugins', array( &$this, 'sanitize' ) );
+		register_setting( 'pc-opt-group', 'block-plugins', array( $this, 'sanitize' ) );
+		register_setting( 'pc-opt-group', 'show-blocked-plugins', array( $this, 'sanitize' ) );
 
 		add_settings_section( 'pc-section', __('', 'plugin-control' ), '__return_false', $this->pagename );
 
-		add_settings_field( 'pc-field-block-plugins', __( 'Block Plugins', 'plugin-control' ), array( &$this, 'field1' ), $this->pagename, 'pc-section', $this->blocklist );
+		add_settings_field( 'pc-field-block-plugins', __( 'Block Plugins', 'plugin-control' ), array( $this, 'field1' ), $this->pagename, 'pc-section', $this->blocklist );
 
-		add_settings_field( 'pc-field-show-blocked-plugins', __( 'Show Blocked Plugins', 'plugin-control' ), array( &$this, 'field2' ), $this->pagename, 'pc-section', $this->showblocked );
+		add_settings_field( 'pc-field-show-blocked-plugins', __( 'Show Blocked Plugins', 'plugin-control' ), array( $this, 'field2' ), $this->pagename, 'pc-section', $this->showblocked );
 	}
 
 	function sanitize( $input ) {
@@ -112,18 +112,18 @@ class Plugin_Control {
 
 	function intercept_post() {
 		if ( ! isset( $_REQUEST['checked'] ) ) return;
-		$_REQUEST['checked'] = array_filter( $_REQUEST['checked'], array( &$this, 'is_plugin_unblocked' ) );
+		$_REQUEST['checked'] = array_filter( $_REQUEST['checked'], array( $this, 'is_plugin_unblocked' ) );
 	}
 
 	function pre_update_option_active_plugins( $newvalue, $oldvalue ) {
 		// removed all blocked plugins
 		$diff = array_diff( $newvalue, $oldvalue );
-		$newvalue = array_filter( $diff, array( &$this, 'is_plugin_unblocked' ) );
+		$newvalue = array_filter( $diff, array( $this, 'is_plugin_unblocked' ) );
 		return $newvalue;
 	}
 
 	function admin_menu() {
-		$this->pagename = add_plugins_page( __( 'Plugin Control', 'plugin-control' ), __( 'Plugin Control', 'plugin-control' ), 'edit_posts', __CLASS__, array( &$this, 'page' ) );
+		$this->pagename = add_plugins_page( __( 'Plugin Control', 'plugin-control' ), __( 'Plugin Control', 'plugin-control' ), 'edit_posts', __CLASS__, array( $this, 'page' ) );
 	}
 
 	function page() {
